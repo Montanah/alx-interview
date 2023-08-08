@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 """ Minimum Operations """
 
-import math
-
-
 def minOperations(n):
     """ 
     Calculates the fewest number of operations needed to result in
@@ -11,10 +8,7 @@ def minOperations(n):
     """
     if n <= 1:
         return 0
-    if n % 2 == 0:
-        return minOperations(n / 2) + 2
     else:
-        for i in range(3, int(math.sqrt(n) + 1), 2):
+        for i in range(2, n + 1):
             if n % i == 0:
-                return minOperations(n / i) + i
-        return n
+                return minOperations(int(n / i)) + i
