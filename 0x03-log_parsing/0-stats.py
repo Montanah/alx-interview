@@ -37,3 +37,6 @@ def main():
     for key in ['200', '301', '400', '401', '403', '404', '405', '500']:
         if status[key] != 0:
             print('{}: {}'.format(key, status[key]))
+
+
+main()
