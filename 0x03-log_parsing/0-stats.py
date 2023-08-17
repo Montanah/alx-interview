@@ -1,38 +1,42 @@
 #!/usr/bin/python3
-"""a script that reads stdin line by line and computes metrics:"""
+"""module with log parsing function"""
 
 import sys
 
 
-def print_stats(status_codes, file_size):
-    """Prints the stats"""
-    print("File size: {}".format(file_size))
-    for key, value in sorted(status_codes.items()):
-        if value != 0:
-            print("{}: {}".format(key, value))
+def main():
+    """prints stats every 10 lines"""
+    l_count = 0
+    f_size = 0
+    status = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0, '404': 0,
+              '405': 0, '500': 0}
 
-
-if __name__ == "__main__":
-    status_codes = {"200": 0, "301": 0, "400": 0, "401": 0,
-                    "403": 0, "404": 0, "405": 0, "500": 0}
-    file_size = 0
-    counter = 0
     try:
         for line in sys.stdin:
-            counter += 1
-            data = line.split()
-            try:
-                file_size += int(data[-1])
-            except:
-                pass
-            try:
-                if data[-2] in status_codes:
-                    status_codes[data[-2]] += 1
-            except:
-                pass
-            if counter % 10 == 0:
-                print_stats(status_codes, file_size)
-        print_stats(status_codes, file_size)
+            input_list = line.split()
+            if len(input_list) < 2:
+                continue
+            l_count += 1
+            f_size += int(input_list[-1])
+            if input_list[-2] not in status:
+                continue
+            status[input_list[-2]] += 1
+            if l_count == 10:
+                l_count = 0
+                print('File size: {}'.format(f_size))
+                for key in ['200', '301', '400', '401', '403', '404',
+                            '405', '500']:
+
+                    if status[key] != 0:
+                        print('{}: {}'.format(key, status[key]))
     except KeyboardInterrupt:
-        print_stats(status_codes, file_size)
-        raise
+        pass
+    except Exception:
+        return
+    print('File size: {}'.format(f_size))
+    for key in ['200', '301', '400', '401', '403', '404', '405', '500']:
+        if status[key] != 0:
+            print('{}: {}'.format(key, status[key]))
+
+
+main()
