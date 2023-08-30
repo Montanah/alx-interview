@@ -1,1 +1,1 @@
-ALX Interview
+N Queens
